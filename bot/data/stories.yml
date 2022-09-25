@@ -1,0 +1,28 @@
+version: "2.0"
+
+stories:
+
+- story: interactive story 1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: request_nums
+  - action: num_form
+  - active_loop: num_form
+  - slot_was_set:
+    - requested_slot: name
+  - slot_was_set:
+    - name: John
+  - slot_was_set:
+    - requested_slot: first_num
+  - slot_was_set:
+    - first_num: example
+  - slot_was_set:
+    - requested_slot: second_num
+  - slot_was_set:
+    - second_num: example-example
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: utter_submit
+  - action: utter_slots_values

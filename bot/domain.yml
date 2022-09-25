@@ -1,0 +1,78 @@
+version: '3.0'
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+intents:
+- greet
+- request_nums
+- goodbye
+- affirm
+- deny
+- bot_challenge
+forms:
+  num_form:
+    required_slots:
+      - name
+      - first_num
+      - second_num
+      - result
+slots:
+  name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+         - active_loop: num_form
+           requested_slot: name
+  first_num:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+         - active_loop: num_form
+           requested_slot: first_num
+  second_num:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+         - active_loop: num_form
+           requested_slot: second_num
+# This part if not commented throws an error "Failed to execute custom action".
+# I don't know how to fix it. I copied this part of code from Rasa Docs for v3.0+.
+  result:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+        action: action_set_result
+        entity: result
+
+           
+responses:
+  utter_greet:
+  - text: Hello. My name is Jarvis. I'm a simple bot. Type "start" or "go" to begin. # What's your name?
+  utter_goodbye:
+  - text: Bye
+  utter_iamabot:
+  - text: I am a simple bot. You can call me Jarvis.
+  utter_ask_name:
+  - text: What's your name?
+  utter_ask_first_num:
+  - text: So {name}, tell me the first number, please.
+  utter_ask_second_num:
+  - text: Your first number is {first_num}, tell me the second one.
+  utter_submit:
+  - text: Ok. Thanks! Here it is {second_num}.
+  utter_slots_values:
+  # If you put {first_num} or {second_num} instead of {result}, dialog will pass to the end.
+  # Just to check if it works in general. It works :)
+  - text: So, your numbers are {first_num} and {second_num}. The result is {result}.
+  
+actions:
+- utter_greet
+- utter_slots_values
+- utter_submit
